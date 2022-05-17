@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  nginx:
+    build: ./nginx
+    volumes:
+      - './project/public:/app/public'
+    ports:
+      - '3100:80'
+    depends_on:
+      - app
+  app:
+    build: ./app
+    volumes:
+      - '.:/app'
+#  php-cli:
+#    build: ./app
+#    volumes:
+#      - '.:/app'
