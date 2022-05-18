@@ -3,7 +3,7 @@ WORKDIR "/app"
 
 RUN apk add php8-cli
 RUN apk add postgresql
-RUN apk add apk add libpq-dev
+RUN apk add libpq-dev
 RUN docker-php-ext-install pgsql
 RUN docker-php-ext-install pdo_pgsql
 

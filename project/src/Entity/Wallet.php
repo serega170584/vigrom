@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\WalletRepository;
@@ -11,10 +13,14 @@ class Wallet
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private string $name;
+
+    #[ORM\ManyToOne(targetEntity: Currency::class, inversedBy: 'wallets')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $currency;
 
     public function getId(): ?int
     {
@@ -32,4 +38,17 @@ class Wallet
 
         return $this;
     }
+
+    public function getCurrency(): ?Currency
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(?Currency $currency): self
+    {
+        $this->currency = $currency;
+
+        return $this;
+    }
+
 }
