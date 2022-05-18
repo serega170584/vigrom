@@ -24,6 +24,12 @@ class Transaction
     #[ORM\JoinColumn(nullable: false)]
     private Wallet $wallet;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $type;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $reason;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -49,6 +55,30 @@ class Transaction
     public function setWallet(Wallet $wallet): self
     {
         $this->wallet = $wallet;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getReason(): ?string
+    {
+        return $this->reason;
+    }
+
+    public function setReason(string $reason): self
+    {
+        $this->reason = $reason;
 
         return $this;
     }
