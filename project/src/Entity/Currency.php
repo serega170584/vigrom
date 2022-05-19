@@ -20,7 +20,7 @@ class Currency
     #[ORM\Column(type: 'string', length: 3)]
     private string $name;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
     private float $rate;
 
     #[ORM\OneToMany(mappedBy: 'currency', targetEntity: Wallet::class)]

@@ -20,7 +20,7 @@ class Transaction
     #[ORM\Column(type: 'integer')]
     private int $amount;
 
-    #[ORM\ManyToOne(targetEntity: wallet::class, inversedBy: 'transactions')]
+    #[ORM\ManyToOne(targetEntity: Wallet::class, inversedBy: 'transactions')]
     #[ORM\JoinColumn(nullable: false)]
     private Wallet $wallet;
 
@@ -29,6 +29,9 @@ class Transaction
 
     #[ORM\Column(type: 'string', length: 255, enumType: TransactionReason::class)]
     private TransactionReason $reason;
+
+    #[ORM\Column(type: 'string', length: 255, enumType: TransactionStatus::class)]
+    private TransactionStatus $status;
 
     public function getId(): ?int
     {
@@ -79,6 +82,18 @@ class Transaction
     public function setReason(TransactionReason $reason): self
     {
         $this->reason = $reason;
+
+        return $this;
+    }
+
+    public function getStatus(): TransactionStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(TransactionStatus $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

@@ -27,6 +27,9 @@ class Wallet
     #[ORM\OneToMany(mappedBy: 'wallet', targetEntity: Transaction::class)]
     private Collection $transactions;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isOccupied;
+
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
@@ -87,6 +90,18 @@ class Wallet
                 $transaction->setWallet(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isIsOccupied(): ?bool
+    {
+        return $this->isOccupied;
+    }
+
+    public function setIsOccupied(bool $isOccupied): self
+    {
+        $this->isOccupied = $isOccupied;
 
         return $this;
     }
