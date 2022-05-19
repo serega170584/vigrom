@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Wallet;
 use App\Service\TransactionService;
 use App\Validator\TransactionValidator;
+use App\Validator\WalletValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,8 +35,10 @@ class WalletController extends AbstractController
     }
 
     #[Route('/balance/{id}', name: 'wallet_balance')]
-    public function balance(?Wallet $wallet)
+    public function balance(?Wallet $wallet, WalletValidator $walletValidator): JsonResponse
     {
+        $walletValidator->validate($wallet);
+
 
     }
 }
