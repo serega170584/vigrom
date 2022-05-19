@@ -9,17 +9,18 @@ use App\Entity\TransactionReason;
 use App\Entity\TransactionStatus;
 use App\Entity\TransactionType;
 use App\Entity\Wallet;
+use App\Traits\EmptyWalletValidatorTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TransactionValidator
 {
+    use EmptyWalletValidatorTrait;
+
     public function map(?Wallet $wallet, Request $request): TransactionData
     {
-        if (null === $wallet) {
-            throw new NotFoundHttpException('Wallet is not found!');
-        }
+        $this->validateWallet($wallet);
 
         $amount = $request->get('amount');
         if (null === $amount) {

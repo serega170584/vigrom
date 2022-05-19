@@ -18,8 +18,8 @@ class WalletController extends AbstractController
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\Exception\ORMException
      */
-    #[Route('/balance', name: 'wallet_balance')]
-    public function index(
+    #[Route('/refill/{id}', name: 'wallet_refill')]
+    public function refill(
         ?Wallet $wallet,
         Request $request,
         TransactionValidator $transactionValidator,
@@ -31,5 +31,11 @@ class WalletController extends AbstractController
         $transactionService->saveTransaction($transactionData);
 
         return $this->json([]);
+    }
+
+    #[Route('/balance/{id}', name: 'wallet_balance')]
+    public function balance(?Wallet $wallet)
+    {
+
     }
 }
