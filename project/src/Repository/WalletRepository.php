@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,11 +19,15 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class WalletRepository extends ServiceEntityRepository
 {
+    private TransactionRepository $transactionRepository;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry $registry,
+        $transactionRepository
+    )
     {
-        
         parent::__construct($registry, Wallet::class);
+        $this->transactionRepository = $transactionRepository;
     }
 
     public function add(Wallet $entity, bool $flush = false): void
@@ -67,4 +72,15 @@ class WalletRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getBalance(Wallet $wallet): int
+    {
+        $transactionRepository = $this->transactionRepository;
+        return $transactionRepository->getDebit($wallet) - $transactionRepository->getCredit($wallet);
+    }
+
 }
