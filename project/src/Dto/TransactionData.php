@@ -17,7 +17,8 @@ class TransactionData
         public readonly TransactionType $type,
         public readonly TransactionReason $reason,
         public readonly TransactionStatus $status
-    ) {
+    )
+    {
     }
 
     /**
