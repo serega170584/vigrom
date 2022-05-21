@@ -10,11 +10,9 @@ use App\Repository\TransactionRepository;
 use App\Repository\WalletRepository;
 use App\Validator\TransactionValidator;
 use App\Validator\WalletValidator;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,17 +20,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class WalletController extends AbstractController
 {
-    /**
-     * @throws OptimisticLockException
-     * @throws ORMException
-     */
     #[Route('/refill/{id}', name: 'wallet_refill', methods: ['POST'])]
     public function refill(
         ?Wallet $wallet,
         Request $request,
         TransactionValidator $transactionValidator,
         TransactionRepository $transactionRepository,
-        EntityManager $entityManager
+        EntityManagerInterface $entityManager
     ): JsonResponse
     {
         $transactionData = $transactionValidator->map($wallet, $request);
