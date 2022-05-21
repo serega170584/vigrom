@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\TransactionStatus;
 use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -23,7 +23,7 @@ class WalletRepository extends ServiceEntityRepository
 
     public function __construct(
         ManagerRegistry $registry,
-        $transactionRepository
+        TransactionRepository $transactionRepository
     )
     {
         parent::__construct($registry, Wallet::class);
@@ -81,6 +81,17 @@ class WalletRepository extends ServiceEntityRepository
     {
         $transactionRepository = $this->transactionRepository;
         return $transactionRepository->getDebit($wallet) - $transactionRepository->getCredit($wallet);
+    }
+
+    public function getForPendingWallets(): iterable
+    {
+        return $this->createQueryBuilder('w')
+            ->innerJoin('w.transactions', 't')
+            ->andWhere('w.isOccupied = :isOccupied')->setParameter('isOccupied', false)
+            ->andWhere('t.status = :status')->setParameter('status', TransactionStatus::NEW)
+            ->orderBy('w.id', 'DESC')
+            ->getQuery()
+            ->toIterable();
     }
 
 }
