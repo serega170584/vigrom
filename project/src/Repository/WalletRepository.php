@@ -7,6 +7,8 @@ namespace App\Repository;
 use App\Entity\TransactionStatus;
 use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -72,15 +74,32 @@ class WalletRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    /**
+     * @throws NonUniqueResultException
+     */
     public function findPendingWallet(int $walletId): Wallet
     {
-        $wallets = $this->createQueryBuilder('w')
-            ->innerJoin('w.transactions', 't')
+        return $this
+            ->getPendingQuery()
             ->andWhere('w.id = :id')->setParameter('id', $walletId)
-            ->where('t.status = :status')->setParameter('status', TransactionStatus::NEW)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findPendingWallets(): iterable
+    {
+        return $this
+            ->getPendingQuery()
             ->getQuery()
             ->toIterable();
-        return current($wallets);
+    }
+
+    private function getPendingQuery(): QueryBuilder
+    {
+        return $this->createQueryBuilder('w')
+            ->innerJoin('w.transactions', 't')
+            ->where('t.status = :status')->setParameter('status', TransactionStatus::NEW)
+            ->orderBy('t.createdAt', 'ASC');
     }
 
 }

@@ -10,11 +10,15 @@ use App\Message\BalanceUpdater;
 use App\Repository\TransactionRepository;
 use App\Repository\WalletRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class BalanceUpdaterHandler
 {
+    /**
+     * @throws NonUniqueResultException
+     */
     public function __invoke(
         BalanceUpdater $balanceUpdater,
         TransactionRepository $transactionRepository,
