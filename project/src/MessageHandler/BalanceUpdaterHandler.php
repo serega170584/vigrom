@@ -17,21 +17,21 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class BalanceUpdaterHandler
 {
-    /**
-     * @throws NonUniqueResultException
-     */
-    public function __invoke(
-        BalanceUpdater $balanceUpdater,
-        TransactionRepository $transactionRepository,
-        WalletRepository $walletRepository,
-        EntityManagerInterface $entityManager
+    public function __construct(
+        public readonly TransactionRepository $transactionRepository,
+        public readonly WalletRepository $walletRepository,
+        public readonly EntityManagerInterface $entityManager
     )
+    {
+    }
+
+    public function __invoke(BalanceUpdater $balanceUpdater)
     {
         $walletId = $balanceUpdater->getWalletId();
 
-        $wallet = $walletRepository->find($walletId);
+        $wallet = $this->walletRepository->find($walletId);
 
-        $transactions = $transactionRepository->findPendingTransactions($walletId);
+        $transactions = $this->transactionRepository->findPendingTransactions($walletId);
 
         $balance = $wallet->getBalance();
 
@@ -56,7 +56,7 @@ class BalanceUpdaterHandler
         $wallet->setBalance($balance);
         $wallet->setIsOccupied(false);
 
-        $entityManager->flush();
+        $this->entityManager->flush();
 
     }
 }
