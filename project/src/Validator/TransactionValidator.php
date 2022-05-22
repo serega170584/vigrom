@@ -60,7 +60,7 @@ class TransactionValidator
 
         $currencyRate = $currencyRepository->find($currency)->getRate();
 
-        $walletCurrencyId = $wallet->getCurrency()->getId();
+        $walletCurrencyId = $wallet->getCurrencyId()->getId();
         $walletCurrencyRate = $currencyRepository->find($walletCurrencyId)->getRate();
 
         $currencyExchange = new FixedExchange([

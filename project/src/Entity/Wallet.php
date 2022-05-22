@@ -20,9 +20,8 @@ class Wallet
     #[ORM\Column(type: 'string', length: 255)]
     private string $name;
 
-    #[ORM\ManyToOne(targetEntity: Currency::class, inversedBy: 'wallets')]
-    #[ORM\JoinColumn(nullable: false)]
-    private Currency $currency;
+    #[ORM\Column(type: 'string', length: 3)]
+    private string $currencyId;
 
     #[ORM\OneToMany(mappedBy: 'wallet', targetEntity: Transaction::class)]
     private Collection $transactions;
@@ -55,14 +54,14 @@ class Wallet
         return $this;
     }
 
-    public function getCurrency(): Currency
+    public function getCurrencyId(): string
     {
-        return $this->currency;
+        return $this->currencyId;
     }
 
-    public function setCurrency(Currency $currency): self
+    public function setCurrencyId(string $currency): self
     {
-        $this->currency = $currency;
+        $this->currencyId = $currency;
 
         return $this;
     }

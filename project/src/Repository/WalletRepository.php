@@ -97,9 +97,10 @@ class WalletRepository extends ServiceEntityRepository
     private function getPendingQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('w')
+            ->distinct()
             ->innerJoin('w.transactions', 't')
             ->where('t.status = :status')->setParameter('status', TransactionStatus::NEW)
-            ->orderBy('t.createdAt', 'ASC');
+            ->orderBy('w.id', 'ASC');
     }
 
 }

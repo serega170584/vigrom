@@ -19,14 +19,6 @@ class Currency
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
     private float $rate;
 
-    #[ORM\OneToMany(mappedBy: 'currency', targetEntity: Wallet::class)]
-    private $wallets;
-
-    public function __construct()
-    {
-        $this->wallets = new ArrayCollection();
-    }
-
     public function getId(): string
     {
         return $this->id;
@@ -40,36 +32,6 @@ class Currency
     public function setRate(float $rate): self
     {
         $this->rate = $rate;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Wallet>
-     */
-    public function getWallets(): Collection
-    {
-        return $this->wallets;
-    }
-
-    public function addWallet(Wallet $wallet): self
-    {
-        if (!$this->wallets->contains($wallet)) {
-            $this->wallets[] = $wallet;
-            $wallet->setCurrency($this);
-        }
-
-        return $this;
-    }
-
-    public function removeWallet(Wallet $wallet): self
-    {
-        if ($this->wallets->removeElement($wallet)) {
-            // set the owning side to null (unless already changed)
-            if ($wallet->getCurrency() === $this) {
-                $wallet->setCurrency(null);
-            }
-        }
 
         return $this;
     }

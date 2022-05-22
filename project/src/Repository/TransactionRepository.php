@@ -12,6 +12,7 @@ use App\Traits\CreateEntityTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -73,5 +74,21 @@ class TransactionRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    private function getPendingQuery(): QueryBuilder
+    {
+        return $this->createQueryBuilder('t')
+            ->innerJoin('t.wallet', 'w')
+            ->where('t.status = :status')->setParameter('status', TransactionStatus::NEW)
+            ->orderBy('t.createdAt', 'ASC');
+    }
+
+    public function findPendingWallets(): iterable
+    {
+        return $this
+            ->getPendingQuery()
+            ->getQuery()
+            ->toIterable();
+    }
 
 }
