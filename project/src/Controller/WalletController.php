@@ -7,12 +7,11 @@ namespace App\Controller;
 use App\Entity\Transaction;
 use App\Entity\Wallet;
 use App\Repository\TransactionRepository;
-use App\Repository\WalletRepository;
 use App\Validator\TransactionValidator;
 use App\Validator\WalletValidator;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
+use Money\Currencies\ISOCurrencies;
+use Money\Currency;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,19 +43,18 @@ class WalletController extends AbstractController
         return $this->json($entity->getId());
     }
 
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
-    #[Route('/balance/{id}', name: 'wallet_balance')]
+    #[Route('/balance/{id}', name: 'wallet_balance', methods: ['GET'])]
     public function balance(
         ?Wallet $wallet,
         WalletValidator $walletValidator,
-        WalletRepository $walletRepository
     ): JsonResponse
     {
         $walletValidator->validate($wallet);
 
-        return $this->json($wallet->getBalance());
+        $currencies = new ISOCurrencies();
+
+        $subunitDivider = 10 ** $currencies->subunitFor(new Currency($wallet->getCurrencyId()));
+
+        return $this->json($wallet->getBalance() / $subunitDivider);
     }
 }

@@ -34,3 +34,9 @@ http://localhost:3100/balance/{номер кошелька}
 В ответе получаем сумму в валюте кошелька
 
 #SQL запрос, который вернет сумму, полученную по причине refund за последние 7 дней.
+
+SELECT SUM(amount)
+FROM transaction
+WHERE reason = 'refund'
+AND status = 'approved'
+AND created_at >= CURRENT_TIMESTAMP - INTERVAL '7 days'
