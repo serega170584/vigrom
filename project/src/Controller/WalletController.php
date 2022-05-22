@@ -57,6 +57,6 @@ class WalletController extends AbstractController
     {
         $walletValidator->validate($wallet);
 
-        return $this->json($walletRepository->getBalance($wallet));
+        return $this->json($wallet->getBalance());
     }
 }
