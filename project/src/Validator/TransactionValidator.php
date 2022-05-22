@@ -89,7 +89,7 @@ class TransactionValidator
 
         return new TransactionData(
             $wallet,
-            (int)$money->getAmount(),
+            ($type === TransactionType::DEBIT) ? (int)$money->getAmount() : -(int)$money->getAmount(),
             $type,
             $reason,
             TransactionStatus::NEW

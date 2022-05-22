@@ -39,17 +39,12 @@ class BalanceUpdaterHandler
             /**
              * @var Transaction $transaction
              */
-            if ($transaction->getType() === TransactionType::DEBIT) {
-                $balance += $transaction->getAmount();
-                $transaction->setStatus(TransactionStatus::APPROVED);
-            } else {
-                $walletBalance = $balance;
-                $balance -= $transaction->getAmount();
-                $transaction->setStatus(TransactionStatus::APPROVED);
-                if ($balance < 0) {
-                    $balance = $walletBalance;
-                    $transaction->setStatus(TransactionStatus::ERROR);
-                }
+            $walletBalance = $balance;
+            $balance += $transaction->getAmount();
+            $transaction->setStatus(TransactionStatus::APPROVED);
+            if ($balance < 0) {
+                $balance = $walletBalance;
+                $transaction->setStatus(TransactionStatus::ERROR);
             }
         }
 
