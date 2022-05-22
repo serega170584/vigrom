@@ -24,7 +24,6 @@ class TransactionValidator
     use EmptyWalletValidatorTrait;
 
     public function __construct(
-        public readonly ISOCurrencies $currencies,
         public readonly CurrencyRepository $currencyRepository
     )
     {
@@ -44,8 +43,10 @@ class TransactionValidator
             throw new BadRequestHttpException('Amount is zero!');
         }
 
+        $currencies = new ISOCurrencies();
+
         $currency = $request->get('currency');
-        if (!$this->currencies->contains($currency)) {
+        if (!$currencies->contains(new Currency($currency))) {
             throw new BadRequestHttpException('Currency is not recognized!');
         }
 
@@ -53,14 +54,14 @@ class TransactionValidator
             throw new BadRequestHttpException('Currency is not recognized!');
         }
 
-        $subunitDivider = 10 ** $this->currencies->subunitFor(new Currency($currency));
+        $subunitDivider = 10 ** $currencies->subunitFor(new Currency($currency));
         $money = new Money($amount * $subunitDivider, new Currency($currency));
 
         $currencyRepository = $this->currencyRepository;
 
         $currencyRate = $currencyRepository->find($currency)->getRate();
 
-        $walletCurrencyId = $wallet->getCurrencyId()->getId();
+        $walletCurrencyId = $wallet->getCurrencyId();
         $walletCurrencyRate = $currencyRepository->find($walletCurrencyId)->getRate();
 
         $currencyExchange = new FixedExchange([
@@ -69,16 +70,20 @@ class TransactionValidator
             ]
         ]);
 
-        $moneyConverter = new MoneyConverter($this->currencies, $currencyExchange);
+        $moneyConverter = new MoneyConverter($currencies, $currencyExchange);
         $money = $moneyConverter->convert($money, new Currency($walletCurrencyId));
 
         $type = $request->get('type');
-        if (!($type instanceof TransactionType)) {
+        try {
+            $type = TransactionType::from($type);
+        } catch (\ValueError $e) {
             throw new BadRequestHttpException('Type is not recognized!');
         }
 
         $reason = $request->get('reason');
-        if (!($reason instanceof TransactionReason)) {
+        try {
+            $reason = TransactionReason::from($reason);
+        } catch (\ValueError $e) {
             throw new BadRequestHttpException('Reason is not recognized!');
         }
 
