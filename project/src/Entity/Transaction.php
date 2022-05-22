@@ -30,6 +30,9 @@ class Transaction
     #[ORM\Column(type: 'string', length: 255, enumType: TransactionReason::class)]
     private TransactionReason $reason;
 
+    #[ORM\Column(type: 'string', length: 255, enumType: TransactionStatus::class)]
+    private TransactionStatus $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,6 +82,18 @@ class Transaction
     public function setReason(TransactionReason $reason): self
     {
         $this->reason = $reason;
+
+        return $this;
+    }
+
+    public function getStatus(): TransactionStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(TransactionStatus $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

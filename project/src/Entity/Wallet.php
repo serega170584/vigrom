@@ -31,7 +31,7 @@ class Wallet
     private \DateTimeImmutable $balancedAt;
 
     #[ORM\Column(type: 'integer')]
-    private $balance;
+    private int $balance;
 
     public function __construct()
     {
@@ -109,7 +109,7 @@ class Wallet
         return $this;
     }
 
-    public function getBalance(): ?int
+    public function getBalance(): int
     {
         return $this->balance;
     }

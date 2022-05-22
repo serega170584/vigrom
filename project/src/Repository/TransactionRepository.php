@@ -10,6 +10,8 @@ use App\Entity\TransactionType;
 use App\Entity\Wallet;
 use App\Traits\CreateEntityTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -71,37 +73,5 @@ class TransactionRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-
-    /**
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\NoResultException
-     */
-    public function getDebit(Wallet $wallet): int
-    {
-        return $this->createQueryBuilder('t')
-            ->select('SUM(t.amount)')
-            ->andWhere('t.wallet=:wallet')->setParameter('wallet', $wallet)
-            ->andWhere('t.status=:status')->setParameter('status', TransactionStatus::APPROVED)
-            ->andWhere('t.type=:type')->setParameter('type', TransactionType::DEBIT)
-            ->orderBy('t.id')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\NoResultException
-     */
-    public function getCredit(Wallet $wallet): int
-    {
-        return $this->createQueryBuilder('t')
-            ->select('SUM(t.amount)')
-            ->andWhere('t.wallet=:wallet')->setParameter('wallet', $wallet)
-            ->andWhere('t.status=:status')->setParameter('status', TransactionStatus::APPROVED)
-            ->andWhere('t.type=:type')->setParameter('type', TransactionType::CREDIT)
-            ->orderBy('t.id')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
 
 }
