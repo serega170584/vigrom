@@ -33,6 +33,9 @@ class Wallet
     #[ORM\Column(type: 'integer')]
     private int $balance;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isOccupied;
+
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
@@ -117,6 +120,18 @@ class Wallet
     public function setBalance(int $balance): self
     {
         $this->balance = $balance;
+
+        return $this;
+    }
+
+    public function isIsOccupied(): bool
+    {
+        return $this->isOccupied;
+    }
+
+    public function setIsOccupied(bool $isOccupied): self
+    {
+        $this->isOccupied = $isOccupied;
 
         return $this;
     }

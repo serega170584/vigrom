@@ -33,6 +33,9 @@ class Transaction
     #[ORM\Column(type: 'string', length: 255, enumType: TransactionStatus::class)]
     private TransactionStatus $status;
 
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $createdAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -94,6 +97,18 @@ class Transaction
     public function setStatus(TransactionStatus $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

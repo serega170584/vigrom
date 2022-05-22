@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\TransactionStatus;
 use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -71,5 +72,15 @@ class WalletRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findPendingWallet(int $walletId): Wallet
+    {
+        $wallets = $this->createQueryBuilder('w')
+            ->innerJoin('w.transactions', 't')
+            ->andWhere('w.id = :id')->setParameter('id', $walletId)
+            ->where('t.status = :status')->setParameter('status', TransactionStatus::NEW)
+            ->getQuery()
+            ->toIterable();
+        return current($wallets);
+    }
 
 }
