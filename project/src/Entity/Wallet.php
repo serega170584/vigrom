@@ -27,8 +27,8 @@ class Wallet
     #[ORM\OneToMany(mappedBy: 'wallet', targetEntity: Transaction::class)]
     private Collection $transactions;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isOccupied;
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $balancedAt;
 
     public function __construct()
     {
@@ -94,14 +94,14 @@ class Wallet
         return $this;
     }
 
-    public function isIsOccupied(): ?bool
+    public function getBalancedAt(): ?\DateTimeImmutable
     {
-        return $this->isOccupied;
+        return $this->balancedAt;
     }
 
-    public function setIsOccupied(bool $isOccupied): self
+    public function setBalancedAt(\DateTimeImmutable $balancedAt): self
     {
-        $this->isOccupied = $isOccupied;
+        $this->balancedAt = $balancedAt;
 
         return $this;
     }
