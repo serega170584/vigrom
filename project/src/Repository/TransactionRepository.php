@@ -83,10 +83,11 @@ class TransactionRepository extends ServiceEntityRepository
             ->orderBy('t.createdAt', 'ASC');
     }
 
-    public function findPendingWallets(): iterable
+    public function findPendingTransactions(int $walletId): iterable
     {
         return $this
             ->getPendingQuery()
+            ->andWhere('w.id = :id')->setParameter('id', $walletId)
             ->getQuery()
             ->toIterable();
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
+use App\Entity\Transaction;
 use App\Entity\TransactionStatus;
 use App\Entity\TransactionType;
 use App\Message\BalanceUpdater;
@@ -26,13 +27,18 @@ class BalanceUpdaterHandler
         EntityManagerInterface $entityManager
     )
     {
-        $wallet = $walletRepository->findPendingWallet($balanceUpdater->getWalletId());
+        $walletId = $balanceUpdater->getWalletId();
 
-        $transactions = $wallet->getTransactions();
+        $wallet = $walletRepository->find($walletId);
+
+        $transactions = $transactionRepository->findPendingTransactions($walletId);
 
         $balance = $wallet->getBalance();
 
         foreach ($transactions as $transaction) {
+            /**
+             * @var Transaction $transaction
+             */
             if ($transaction->getType() === TransactionType::DEBIT) {
                 $balance += $transaction->getAmount();
                 $transaction->setStatus(TransactionStatus::APPROVED);

@@ -74,17 +74,6 @@ class WalletRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-    /**
-     * @throws NonUniqueResultException
-     */
-    public function findPendingWallet(int $walletId): Wallet
-    {
-        return $this
-            ->getPendingQuery()
-            ->andWhere('w.id = :id')->setParameter('id', $walletId)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
 
     public function findPendingWallets(): iterable
     {
