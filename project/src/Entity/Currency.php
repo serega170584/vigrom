@@ -13,12 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Currency
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private int $id;
-
-    #[ORM\Column(type: 'string', length: 3)]
-    private string $name;
+    #[ORM\Column(type: 'string')]
+    private string $id;
 
     #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
     private float $rate;
@@ -31,21 +27,9 @@ class Currency
         $this->wallets = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): string
     {
         return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getRate(): float
@@ -88,5 +72,13 @@ class Currency
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId(string $id): void
+    {
+        $this->id = $id;
     }
 }

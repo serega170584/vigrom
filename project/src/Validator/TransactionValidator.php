@@ -49,6 +49,10 @@ class TransactionValidator
             throw new BadRequestHttpException('Currency is not recognized!');
         }
 
+        if (null === $this->currencyRepository->find($currency)) {
+            throw new BadRequestHttpException('Currency is not recognized!');
+        }
+
         $subunitDivider = 10 ** $this->currencies->subunitFor(new Currency($currency));
         $money = new Money($amount * $subunitDivider, new Currency($currency));
 

@@ -30,6 +30,9 @@ class Wallet
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $balancedAt;
 
+    #[ORM\Column(type: 'integer')]
+    private $balance;
+
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
@@ -102,6 +105,18 @@ class Wallet
     public function setBalancedAt(\DateTimeImmutable $balancedAt): self
     {
         $this->balancedAt = $balancedAt;
+
+        return $this;
+    }
+
+    public function getBalance(): ?int
+    {
+        return $this->balance;
+    }
+
+    public function setBalance(int $balance): self
+    {
+        $this->balance = $balance;
 
         return $this;
     }
