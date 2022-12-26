@@ -27,7 +27,6 @@ final class Version20220522172407 extends AbstractMigration
             )
             VALUES
             (1,'USD', 'Test wallet 1'),
-            (2,'RUB', 'Test wallet 2'),
             (3,'EUR', 'Test wallet 3'),
             (4,'UAH', 'Test wallet 4'),
             (5,'JPY', 'Test wallet 5')
@@ -40,7 +39,6 @@ final class Version20220522172407 extends AbstractMigration
             )
             VALUES
             ('USD', 75.11),
-            ('RUB', 1),
             ('EUR', 86.12),
             ('UAH', 2.11),
             ('JPY', 0.48)

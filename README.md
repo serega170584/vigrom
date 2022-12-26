@@ -1,39 +1,46 @@
-# Инструкция
+# Instruction
 
-#Разворачивание инфраструктуры
 
-git clone https://github.com/serega170584/vigrom.git
+# Infrastructure deploy 
 
-Зайти в директорию vigrom
+    git clone https://github.com/serega170584/vigrom.git
 
-docker-compose up -d --build
+Visit vigrom directory
 
-Установить пакеты composer: docker-compose exec app composer install
+    docker-compose up -d --build
 
-Запустить миграции: docker-compose exec app php bin/console doctrine:migrations:migrate, при ответе на вопрос нажать Enter
+Install composer packages: 
+    
+    docker-compose exec app composer install
 
-Запустить workerы: docker-compose exec -u 0 app supervisord -c /app/messenger-worker.conf
+Migrations running:
 
-#Метод изменения баланса:
+    docker-compose exec app php bin/console doctrine:migrations:migrate, при ответе на вопрос нажать Enter
 
-http://localhost:3100/refill/{номер кошелька}
+Workers running: 
 
-Пример параметров:
+    docker-compose exec -u 0 app supervisord -c /app/messenger-worker.conf
+
+# Update balance method:
+
+    http://localhost:3100/refill/{wallet number}
+
+Parameters example:
 amount=100
 type=debit
 reason=stock
 currency=USD
 
-В ответе получаем id транзакции
+Response sends transaction id
 
 
-#Метод получения баланса:
+# Get balance method:
 
-http://localhost:3100/balance/{номер кошелька}
+http://localhost:3100/balance/{wallet number}
 
-В ответе получаем сумму в валюте кошелька
+Response sends sum in wallet currency 
 
-#SQL запрос, который вернет сумму, полученную по причине refund за последние 7 дней.
+#SQL query, which return sum, delivered for reason refund for last 7 days.
 
 SELECT SUM(amount)
 FROM transaction
